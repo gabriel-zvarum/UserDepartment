@@ -2,11 +2,13 @@ package br.com.UserDepartment.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +38,15 @@ public class DepartmentController {
 		return repository.save(department);
 	}
 	
+	@PutMapping(value = "{id}")
+	public Department update(@PathVariable Long id, @RequestBody Department department) {
+		Department result = repository.findById(id).get();
+		BeanUtils.copyProperties(department, result, "id");
+		return repository.save(result);
+	}
+	
 	@DeleteMapping(value = "{id}")
 	public void delete(@PathVariable Long id) {
 		repository.delete(findById(id));
-	}
-
+	}	
 }
