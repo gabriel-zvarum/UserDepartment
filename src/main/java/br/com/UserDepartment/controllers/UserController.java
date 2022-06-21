@@ -2,10 +2,8 @@ package br.com.UserDepartment.controllers;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,23 +25,28 @@ public class UserController {
 
 	@GetMapping
 	public List<User> findAll() {
-		List<User> result = repository.findAll();
-		return result;
+		return repository.findAll();
+		
 	}
 
 	@GetMapping(value = "{id}")
 	public User findById(@PathVariable Long id) {
-		User result = repository.findById(id).get();
-		return result;
+		return repository.findById(id).get();
+		
 	}
 
 	@PostMapping
 	public User insert(@RequestBody User user) {
-		User result = repository.save(user);
-		return result;
+		return repository.save(user);
 	}
-	
-	
+
+	@PutMapping(value = "{id}")
+	public User update(@PathVariable Long id, @RequestBody User user) {
+		User result = repository.findById(id).get();
+		BeanUtils.copyProperties(user, result, "id");
+		return repository.save(result);
+	}
+
 	@DeleteMapping(value = "{id}")
 	public void delete(@PathVariable Long id) {
 		repository.delete(findById(id));
