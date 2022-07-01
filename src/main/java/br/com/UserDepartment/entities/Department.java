@@ -15,7 +15,11 @@ public class Department {
 	private Long department_id;
 	private String department_name;
 
-	public Department() {
+	public Department(String department_name) {
+	
+		if (department_name == null)
+			throw new NullPointerException("Favor preencher nome do department");
+					
 	}
 
 	public Long getDepartment_id() {
