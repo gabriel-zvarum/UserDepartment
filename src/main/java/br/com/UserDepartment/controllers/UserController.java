@@ -3,6 +3,8 @@ package br.com.UserDepartment.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.UserDepartment.entities.Department;
 import br.com.UserDepartment.entities.User;
 import br.com.UserDepartment.repositories.UserRepository;
 
@@ -38,26 +39,16 @@ public class UserController {
 	}
 
 	@PostMapping
-	public User save(@RequestBody User user) {
-		if(user.getUser_name().trim().isEmpty())
-			throw new NullPointerException("Existem dados obrigatórios não informados");
+	public User save(@RequestBody @Valid User user) {
+		return repository.save(user);
 
-		else{
-			user.setUser_name(user.getUser_name().trim());
-			return repository.save(user);
-		}
 	}
 
 	@PutMapping(value = "{id}")
-	public User update(@PathVariable Long id, @RequestBody User user) {
-		if(user.getUser_name().trim().isEmpty()) 
-			throw new NullPointerException("Existem dados obrigatórios, não preenchidos");
-		else {
-			User result = repository.findById(id).get();
-			BeanUtils.copyProperties(user, result, "id");
-			user.setUser_name(user.getUser_name().trim());
-			return repository.save(result);	
-		}
+	public User update(@PathVariable Long id, @Valid @RequestBody User user) {
+		User result = repository.findById(id).get();
+		BeanUtils.copyProperties(user, result, "id");
+		return repository.save(result);	
 	}
 
 	@DeleteMapping(value = "{id}")
