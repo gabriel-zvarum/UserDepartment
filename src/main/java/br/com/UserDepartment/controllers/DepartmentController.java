@@ -35,14 +35,25 @@ public class DepartmentController {
 	
 	@PostMapping
 	public Department save(@RequestBody Department department){
-		return repository.save(department);
+		
+		if(department.getDepartment_name().trim().isEmpty()) 
+			throw new NullPointerException("Existem dados obrigatórios, não preenchidos");
+		else 
+			department.setDepartment_name(department.getDepartment_name().trim());
+			return repository.save(department);
 	}
 	
 	@PutMapping(value = "{id}")
 	public Department update(@PathVariable Long id, @RequestBody Department department) {
-		Department result = repository.findById(id).get();
-		BeanUtils.copyProperties(department, result, "id");
-		return repository.save(result);
+		
+		if(department.getDepartment_name().trim().isEmpty()) 
+			throw new NullPointerException("Existem dados obrigatórios, não preenchidos");
+		else {
+			Department result = repository.findById(id).get();
+			BeanUtils.copyProperties(department, result, "id");
+			department.setDepartment_name(department.getDepartment_name().trim());
+			return repository.save(result);	
+		}
 	}
 	
 	@DeleteMapping(value = "{id}")

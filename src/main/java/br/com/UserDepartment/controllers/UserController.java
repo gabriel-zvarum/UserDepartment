@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.UserDepartment.entities.Department;
 import br.com.UserDepartment.entities.User;
 import br.com.UserDepartment.repositories.UserRepository;
 
@@ -38,14 +39,25 @@ public class UserController {
 
 	@PostMapping
 	public User save(@RequestBody User user) {
-		return repository.save(user);
+		if(user.getUser_name().trim().isEmpty())
+			throw new NullPointerException("Existem dados obrigatórios não informados");
+
+		else{
+			user.setUser_name(user.getUser_name().trim());
+			return repository.save(user);
+		}
 	}
 
 	@PutMapping(value = "{id}")
 	public User update(@PathVariable Long id, @RequestBody User user) {
-		User result = repository.findById(id).get();
-		BeanUtils.copyProperties(user, result, "id");
-		return repository.save(result);
+		if(user.getUser_name().trim().isEmpty()) 
+			throw new NullPointerException("Existem dados obrigatórios, não preenchidos");
+		else {
+			User result = repository.findById(id).get();
+			BeanUtils.copyProperties(user, result, "id");
+			user.setUser_name(user.getUser_name().trim());
+			return repository.save(result);	
+		}
 	}
 
 	@DeleteMapping(value = "{id}")
