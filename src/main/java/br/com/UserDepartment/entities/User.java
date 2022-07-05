@@ -19,13 +19,12 @@ public class User {
 	@NotBlank(message = "Campo obrigatorio não preenchido")
 	private String user_name;
 	private String email;
-
+	
 	@ManyToOne
-	@JoinColumn(name="department_id")
+	@JoinColumn(name ="department_id")
 	private Department department;
 	
-	public User() {
-	}
+	public User() {}
 
 	public Long getUser_id() {
 		return user_id;
@@ -49,14 +48,6 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Department getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
+	}	
 
 }
